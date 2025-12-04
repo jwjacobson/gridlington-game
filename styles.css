@@ -1,0 +1,25 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(5, 20vw);
+    grid-template-rows: repeat(5, 20vh);
+    width: 100vw;
+    height: 100vh;
+}
+
+/* Colors from https://www.happyhues.co/palettes/17 */
+.square {
+    background: #f3d2c1;
+    border: 0.25px solid #001858;
+}
