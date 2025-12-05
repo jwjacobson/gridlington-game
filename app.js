@@ -32,11 +32,8 @@ function blinkSquare() {
         }
  
         let current_idx = Math.floor(Math.random() * NUM_SQUARES);
-        while (current_idx === prev_idx) {
-            current_idx = Math.floor(Math.random() * NUM_SQUARES);
-        }
- 
         changeColor(SQUARES[current_idx]);
+        
         prev_idx = current_idx;
     }, BLINK_RATE);
 }
