@@ -25,16 +25,16 @@ function removeTarget (square) {
 }
 
 function blinkSquare() {
-    let prev_idx;
+    let prev_square;
     setInterval(() => {
-        if (prev_idx !== undefined) {
-            revertColor(SQUARES[prev_idx])
+        if (prev_square !== undefined) {
+            revertColor(prev_square)
         }
  
-        let current_idx = Math.floor(Math.random() * NUM_SQUARES);
-        changeColor(SQUARES[current_idx]);
+        let current_square = SQUARES[Math.floor(Math.random() * NUM_SQUARES)];
+        changeColor(current_square);
         
-        prev_idx = current_idx;
+        prev_square = current_square;
     }, BLINK_RATE);
 }
 
