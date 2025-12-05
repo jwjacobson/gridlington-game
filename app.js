@@ -1,14 +1,19 @@
 const NUM_SQUARES = 25;
 const SQUARES = document.querySelectorAll(".square")
 const BLINK_RATE = 200; // Rate of blink in milliseconds
-const ORIGINAL_COLOR = "#f3d2c1";
-const BLINK_COLOR = "#8bd3dd";
+
+// Set colors from styles.css
+const root = document.documentElement;
+const PRIMARY_COLOR = getComputedStyle(root).getPropertyValue('--color-primary').trim();
+const SECONDARY_COLOR = getComputedStyle(root).getPropertyValue('--color-secondary').trim();
+const TERTIARY_COLOR = getComputedStyle(root).getPropertyValue('--color-tertiary').trim();
+const BACKGROUND_COLOR = getComputedStyle(root).getPropertyValue('--color-background').trim();
 
 function changeColor (square) {
-    square.style.backgroundColor = BLINK_COLOR;
+    square.style.backgroundColor = TERTIARY_COLOR;
 }
 function revertColor (square) {
-    square.style.backgroundColor = ORIGINAL_COLOR; 
+    square.style.backgroundColor = BACKGROUND_COLOR; 
 }
 
 function blinkSquare() {
