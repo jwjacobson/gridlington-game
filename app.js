@@ -1,6 +1,6 @@
 const NUM_SQUARES = 25;
-const SQUARES = document.querySelectorAll(".square")
 const BLINK_RATE = 200; // Rate of blink in milliseconds
+const SQUARES = document.querySelectorAll(".square")
 
 // Set colors from styles.css
 const root = document.documentElement;
@@ -17,11 +17,11 @@ function revertColor (square) {
 }
 
 function makeTarget (square) {
-    square.id = "target"
+    square.dataset.target = "true";
 }
 
 function removeTarget (square) {
-    square.id = ""
+    delete square.dataset.target;
 }
 
 function blinkSquare() {
@@ -29,10 +29,13 @@ function blinkSquare() {
     setInterval(() => {
         if (prev_square !== undefined) {
             revertColor(prev_square)
+            removeTarget(prev_square);
         }
  
         let current_square = SQUARES[Math.floor(Math.random() * NUM_SQUARES)];
         changeColor(current_square);
+        makeTarget(current_square);
+        console.log(current_square.id)
         
         prev_square = current_square;
     }, BLINK_RATE);
