@@ -16,6 +16,14 @@ function revertColor (square) {
     square.style.backgroundColor = BACKGROUND_COLOR; 
 }
 
+function makeTarget (square) {
+    square.id = "target"
+}
+
+function removeTarget (square) {
+    square.id = ""
+}
+
 function blinkSquare() {
     let prev_idx;
     setInterval(() => {
