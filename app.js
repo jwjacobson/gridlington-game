@@ -1,5 +1,5 @@
-const NUM_SQUARES = 25;
-const BLINK_RATE = 500; // Rate of blink in milliseconds
+const NUM_SQUARES = 25; // TODO: derive from DOM instead of setting here
+const SPEED = 1000; // Rate colored square change, in milliseconds
 const SQUARES = document.querySelectorAll(".square")
 
 // Set colors from styles.css
@@ -12,6 +12,7 @@ const BACKGROUND_COLOR = getComputedStyle(root).getPropertyValue('--color-backgr
 function changeColor (square, color) {
     square.style.backgroundColor = color;
 }
+
 function revertColor (square) {
     square.style.backgroundColor = BACKGROUND_COLOR; 
 }
@@ -36,7 +37,7 @@ function handleClick (event) {
     } 
 }
 
-function blinkSquare() {
+function runGame() {
     let prev_square;
     setInterval(() => {
         if (prev_square !== undefined) {
@@ -50,11 +51,11 @@ function blinkSquare() {
         console.log(current_square.id)
         
         prev_square = current_square;
-    }, BLINK_RATE);
+    }, SPEED);
 }
 
 SQUARES.forEach(square => {
     square.addEventListener('click', handleClick);
 });
 
-blinkSquare()
+runGame()
