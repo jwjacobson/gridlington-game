@@ -29,27 +29,30 @@ function handleClick (event) {
     const clickedSquare = event.target;
 
     if (clickedSquare.dataset.target === "true") {
-        changeColor(clickedSquare, SECONDARY_COLOR)
-
-        setTimeout(() => {
-            revertColor(clickedSquare);
-        }, 500);
+        removeTarget(clickedSquare);
+        changeColor(clickedSquare, SECONDARY_COLOR);
+        flash();
     } 
+}
+
+function flash () {
+    document.documentElement.style.filter = 'brightness(1.01)';
+    setTimeout(() => document.documentElement.style.filter = '', 25);
 }
 
 function runGame() {
     let prev_square;
     setInterval(() => {
         if (prev_square !== undefined) {
-            revertColor(prev_square)
             removeTarget(prev_square);
+            revertColor(prev_square);
         }
  
         let current_square = SQUARES[Math.floor(Math.random() * NUM_SQUARES)];
+ 
         changeColor(current_square, TERTIARY_COLOR);
         makeTarget(current_square);
-        console.log(current_square.id)
-        
+
         prev_square = current_square;
     }, SPEED);
 }
@@ -58,4 +61,4 @@ SQUARES.forEach(square => {
     square.addEventListener('click', handleClick);
 });
 
-runGame()
+runGame();
