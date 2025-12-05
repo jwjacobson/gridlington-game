@@ -1,5 +1,5 @@
 const NUM_SQUARES = 25; // TODO: derive from DOM instead of setting here
-const SPEED = 1000; // Rate colored square change, in milliseconds
+const SPEED = 1000; // Time each square stays colored, in milliseconds
 const SQUARES = document.querySelectorAll(".square")
 
 // Set colors from styles.css
