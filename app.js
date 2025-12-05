@@ -1,5 +1,5 @@
 const NUM_SQUARES = 25;
-const BLINK_RATE = 200; // Rate of blink in milliseconds
+const BLINK_RATE = 500; // Rate of blink in milliseconds
 const SQUARES = document.querySelectorAll(".square")
 
 // Set colors from styles.css
@@ -9,8 +9,8 @@ const SECONDARY_COLOR = getComputedStyle(root).getPropertyValue('--color-seconda
 const TERTIARY_COLOR = getComputedStyle(root).getPropertyValue('--color-tertiary').trim();
 const BACKGROUND_COLOR = getComputedStyle(root).getPropertyValue('--color-background').trim();
 
-function changeColor (square) {
-    square.style.backgroundColor = TERTIARY_COLOR;
+function changeColor (square, color) {
+    square.style.backgroundColor = color;
 }
 function revertColor (square) {
     square.style.backgroundColor = BACKGROUND_COLOR; 
@@ -24,6 +24,18 @@ function removeTarget (square) {
     delete square.dataset.target;
 }
 
+function handleClick (event) {
+    const clickedSquare = event.target;
+
+    if (clickedSquare.dataset.target === "true") {
+        changeColor(clickedSquare, SECONDARY_COLOR)
+
+        setTimeout(() => {
+            revertColor(clickedSquare);
+        }, 500);
+    } 
+}
+
 function blinkSquare() {
     let prev_square;
     setInterval(() => {
@@ -33,12 +45,16 @@ function blinkSquare() {
         }
  
         let current_square = SQUARES[Math.floor(Math.random() * NUM_SQUARES)];
-        changeColor(current_square);
+        changeColor(current_square, TERTIARY_COLOR);
         makeTarget(current_square);
         console.log(current_square.id)
         
         prev_square = current_square;
     }, BLINK_RATE);
 }
+
+SQUARES.forEach(square => {
+    square.addEventListener('click', handleClick);
+});
 
 blinkSquare()
