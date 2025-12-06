@@ -1,5 +1,7 @@
 const SPEED = 1000; // Time each square stays colored, in milliseconds
-const SQUARES = document.querySelectorAll(".square")
+const SQUARES = document.querySelectorAll(".square");
+const TOTAL_TURNS = 30; // How many times a square lights up
+let PLAYER_SCORE = 0;
 
 // Set colors from styles.css
 const root = document.documentElement;
@@ -30,18 +32,27 @@ function handleClick (event) {
     if (clickedSquare.dataset.target === "true") {
         removeTarget(clickedSquare);
         changeColor(clickedSquare, SECONDARY_COLOR);
+        PLAYER_SCORE += 1 
         flash();
     } 
 }
 
 function flash () {
+    // Very slightly increases the brightness of the whole page for a subtle flash effect.
     document.documentElement.style.filter = 'brightness(1.01)';
     setTimeout(() => document.documentElement.style.filter = '', 25);
 }
 
 function runGame() {
     let prev_square;
-    setInterval(() => {
+    let turn = 0;
+
+    const intervalId = setInterval(() => {
+        if (turn  > TOTAL_TURNS) {
+            clearInterval(intervalId);
+            alert(`Your score was ${PLAYER_SCORE}`)
+        }
+
         if (prev_square !== undefined) {
             removeTarget(prev_square);
             revertColor(prev_square);
@@ -53,6 +64,7 @@ function runGame() {
         makeTarget(current_square);
 
         prev_square = current_square;
+        turn++;
     }, SPEED);
 }
 
