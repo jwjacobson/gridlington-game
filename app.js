@@ -1,4 +1,3 @@
-const NUM_SQUARES = 25; // TODO: derive from DOM instead of setting here
 const SPEED = 1000; // Time each square stays colored, in milliseconds
 const SQUARES = document.querySelectorAll(".square")
 
@@ -48,7 +47,7 @@ function runGame() {
             revertColor(prev_square);
         }
  
-        let current_square = SQUARES[Math.floor(Math.random() * NUM_SQUARES)];
+        let current_square = SQUARES[Math.floor(Math.random() * SQUARES.length)];
  
         changeColor(current_square, TERTIARY_COLOR);
         makeTarget(current_square);
