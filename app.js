@@ -50,7 +50,14 @@ function runGame() {
     const intervalId = setInterval(() => {
         if (turn  > TOTAL_TURNS) {
             clearInterval(intervalId);
-            alert(`Your score was ${PLAYER_SCORE}`)
+            const playAgain = confirm(`Your score was ${PLAYER_SCORE}. Play again?`);
+            if (playAgain) {
+                PLAYER_SCORE = 0;
+                removeTarget(prev_square);
+                revertColor(prev_square);
+                runGame();
+            }
+            return;
         }
 
         if (prev_square !== undefined) {
