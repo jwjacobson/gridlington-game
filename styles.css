@@ -62,10 +62,22 @@ body {
     backdrop-filter: blur(3px);
 }
 
-#difficultyModal h2, #replayModal h2 {
+#difficultyModal h1 {
     color: var(--color-primary);
     margin-bottom: 1.5rem;
     font-size: 1.8rem;
+}
+
+#difficultyModal h2, #replayModal h2 {
+    color: var(--color-primary);
+    margin-bottom: 1.5rem;
+    font-size: 1.6rem;
+}
+
+#divider { 
+    border: none;
+    border-top: 2px solid var(--color-secondary);
+    margin: 20px 0;
 }
 
 #replayModal p {
