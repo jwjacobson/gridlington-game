@@ -51,23 +51,27 @@ function playAgain() {
   quitBtn.onclick = () => {
     modal.close();
 
-    const thanksSquare = document.getElementById('thanks-square');
-    const forSquare = document.getElementById('for-square');
-    const playingSquare = document.getElementById('playing-square');
+    const thanksSquare = document.getElementById('thanksSquare');
+    const forSquare = document.getElementById('forSquare');
+    const playingSquare = document.getElementById('playingSquare');
   
+    const thanksText = thanksSquare.querySelector('h1');
+    const forText = forSquare.querySelector('h1');
+    const playingText = playingSquare.querySelector('h1');
+    
     setTimeout(() => {
       changeColor(thanksSquare, TERTIARY_COLOR);
-      thanksSquare.textContent = 'Thanks';
+      thanksText.textContent = 'Thanks';
     }, 400);
   
     setTimeout(() => {
       changeColor(forSquare, TERTIARY_COLOR);
-      forSquare.textContent = 'for';
+      forText.textContent = 'for';
     }, 1000);
 
     setTimeout(() => {
       changeColor(playingSquare, SECONDARY_COLOR);
-      playingSquare.textContent = 'playing!';
+      playingText.textContent = 'playing!';
     }, 1600);
   };
   

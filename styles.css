@@ -32,6 +32,18 @@ body {
     border: 0.25px solid var(--color-primary);
 }
 
+#thanksSquare, #forSquare, #playingSquare {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#thanksSquare h1, #forSquare h1, #playingSquare h1 {
+    color: var(--color-primary);
+}
+
+
 #difficultyModal, #replayModal {
     border: 1px solid var(--color-primary);
     padding: 2rem;
@@ -50,7 +62,7 @@ body {
     backdrop-filter: blur(3px);
 }
 
-#difficultyModal h2, replayModal h2 {
+#difficultyModal h2, #replayModal h2 {
     color: var(--color-primary);
     margin-bottom: 1.5rem;
     font-size: 1.8rem;
