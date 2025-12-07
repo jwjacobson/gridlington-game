@@ -32,7 +32,7 @@ body {
     border: 0.25px solid var(--color-primary);
 }
 
-#difficultyModal {
+#difficultyModal, #replayModal {
     border: 1px solid var(--color-primary);
     padding: 2rem;
     background-color: var(--color-background);
@@ -45,18 +45,28 @@ body {
     margin: 0;
 }
 
-#difficultyModal::backdrop {
+#difficultyModal::backdrop, #replayModal::backdrop {
     background-color: var(--color-modal-background);
     backdrop-filter: blur(3px);
 }
 
-#difficultyModal h2 {
+#difficultyModal h2, replayModal h2 {
     color: var(--color-primary);
     margin-bottom: 1.5rem;
     font-size: 1.8rem;
 }
 
-#difficultyModal button {
+#replayModal p {
+    color: var(--color-primary);
+    margin: 1.5rem 0;
+}
+
+#replayModal span {
+    color: var(--color-primary);
+    font-weight:bold
+}
+
+#difficultyModal button, #replayModal button {
     display: block;
     width: 100%;
     padding: 1rem 2rem;
@@ -71,14 +81,14 @@ body {
     outline: none;
 }
 
-#difficultyModal button:focus {
+#difficultyModal button:focus, #replayModal button:focus {
     outline: none;
 }
 
-#difficultyModal button:hover {
+#difficultyModal button:hover, #replayModal button:hover {
     background-color: var(--color-tertiary);
 }
 
-#difficultyModal button:active {
+#difficultyModal button:active, #replayModal button:active {
     background-color: var(--color-secondary);
 }
