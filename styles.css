@@ -74,15 +74,15 @@ body {
     font-size: 1.6rem;
 }
 
+#difficultyModal p, #replayModal p {
+    color: var(--color-primary);
+    margin: 1.5rem 0;
+}
+
 #divider { 
     border: none;
     border-top: 2px solid var(--color-secondary);
     margin: 20px 0;
-}
-
-#replayModal p {
-    color: var(--color-primary);
-    margin: 1.5rem 0;
 }
 
 #replayModal span {
