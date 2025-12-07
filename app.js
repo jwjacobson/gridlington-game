@@ -34,6 +34,27 @@ function selectDifficulty() {
   });
 }
 
+function playAgain() {
+  const modal = document.getElementById('replayModal');
+  const playAgainBtn = document.getElementById('playAgainBtn');
+  const quitBtn = document.getElementById('quitBtn');
+  const finalScoreSpan = document.getElementById('finalScore');
+  
+  finalScoreSpan.textContent = PLAYER_SCORE;
+
+  playAgainBtn.onclick = () => {
+    modal.close();
+    PLAYER_SCORE = 0;
+    runGame();
+  };
+  
+  quitBtn.onclick = () => {
+    modal.close();
+  };
+  
+  modal.showModal();
+}
+
 function changeColor (square, color) {
     square.style.backgroundColor = color;
 }
@@ -72,21 +93,15 @@ function runGame() {
     let turn = 0;
 
     const intervalId = setInterval(() => {
-        if (turn  > TOTAL_TURNS) {
-            clearInterval(intervalId);
-            const playAgain = confirm(`Your score was ${PLAYER_SCORE}. Play again?`);
-            if (playAgain) {
-                PLAYER_SCORE = 0;
-                removeTarget(prev_square);
-                revertColor(prev_square);
-                runGame();
-            }
-            return;
-        }
-
         if (prev_square !== undefined) {
             removeTarget(prev_square);
             revertColor(prev_square);
+        }
+
+        if (turn  > TOTAL_TURNS) {
+            clearInterval(intervalId);
+            playAgain(PLAYER_SCORE);
+            return;
         }
  
         let current_square = SQUARES[Math.floor(Math.random() * SQUARES.length)];
