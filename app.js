@@ -1,4 +1,11 @@
-const SPEED = 1000; // Time each square stays colored, in milliseconds
+
+const DIFFICULTIES = {
+  // Time each square stays colored, in milliseconds
+  easy: 1000,
+  medium: 750,
+  hard: 500
+};
+let DIFFICULTY;
 const SQUARES = document.querySelectorAll(".square");
 const TOTAL_TURNS = 30; // How many times a square lights up
 let PLAYER_SCORE = 0;
@@ -9,6 +16,23 @@ const PRIMARY_COLOR = getComputedStyle(root).getPropertyValue('--color-primary')
 const SECONDARY_COLOR = getComputedStyle(root).getPropertyValue('--color-secondary').trim();
 const TERTIARY_COLOR = getComputedStyle(root).getPropertyValue('--color-tertiary').trim();
 const BACKGROUND_COLOR = getComputedStyle(root).getPropertyValue('--color-background').trim();
+
+function selectDifficulty() {
+  return new Promise((resolve) => {
+    const modal = document.getElementById('difficultyModal');
+    const buttons = modal.querySelectorAll('button');
+    
+    buttons.forEach(button => {
+      button.onclick = () => {
+        const difficulty = button.dataset.difficulty;
+        resolve(DIFFICULTIES[difficulty]); 
+        modal.close();
+      };
+    });
+    
+    modal.showModal();
+  });
+}
 
 function changeColor (square, color) {
     square.style.backgroundColor = color;
@@ -72,11 +96,14 @@ function runGame() {
 
         prev_square = current_square;
         turn++;
-    }, SPEED);
+    }, DIFFICULTY);
 }
 
 SQUARES.forEach(square => {
     square.addEventListener('click', handleClick);
 });
 
-runGame();
+selectDifficulty().then(difficulty => {
+  DIFFICULTY = difficulty;
+  runGame();
+});
