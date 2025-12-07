@@ -4,6 +4,7 @@
     --color-secondary: #f582ae;
     --color-tertiary: #8bd3dd;
     --color-background: #f3d2c1;
+    --color-modal-background: rgba(0, 24, 88, 0.5); /* half-transparent version of color-primary*/
 }
 
 * {
@@ -29,4 +30,55 @@ body {
 .square {
     background: var(--color-background);
     border: 0.25px solid var(--color-primary);
+}
+
+#difficultyModal {
+    border: 1px solid var(--color-primary);
+    padding: 2rem;
+    background-color: var(--color-background);
+    max-width: 400px;
+    text-align: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+}
+
+#difficultyModal::backdrop {
+    background-color: var(--color-modal-background);
+    backdrop-filter: blur(3px);
+}
+
+#difficultyModal h2 {
+    color: var(--color-primary);
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+}
+
+#difficultyModal button {
+    display: block;
+    width: 100%;
+    padding: 1rem 2rem;
+    margin: 0.75rem 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    background-color: var(--color-background);
+    border: 1px solid var(--color-primary);
+    cursor: pointer;
+    border-radius: 0;
+    outline: none;
+}
+
+#difficultyModal button:focus {
+    outline: none;
+}
+
+#difficultyModal button:hover {
+    background-color: var(--color-tertiary);
+}
+
+#difficultyModal button:active {
+    background-color: var(--color-secondary);
 }
