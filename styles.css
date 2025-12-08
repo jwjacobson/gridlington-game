@@ -46,7 +46,7 @@ body {
 
 #difficultyModal, #replayModal {
     border: 1px solid var(--color-primary);
-    padding: 2rem;
+    padding: 2rem 2rem 1rem;
     background-color: var(--color-background);
     max-width: 400px;
     text-align: center;
@@ -115,4 +115,8 @@ body {
 
 #difficultyModal button:active, #replayModal button:active {
     background-color: var(--color-secondary);
+}
+
+.attribution {
+    font-size: small;
 }
