@@ -1,13 +1,13 @@
-
 const DIFFICULTIES = {
-  // Time each square stays colored, in milliseconds
+// Time each square stays colored, in milliseconds
   easy: 1000,
   medium: 750,
   hard: 500
 };
-let DIFFICULTY;
 const SQUARES = document.querySelectorAll(".square");
-const TOTAL_TURNS = 30; // How many times a square lights up
+const TOTAL_TURNS = 30; // How many times a square lights up, and therefore the maximum possible score
+
+let DIFFICULTY;
 let PLAYER_SCORE = 0;
 
 // Set colors from styles.css
@@ -18,6 +18,7 @@ const TERTIARY_COLOR = getComputedStyle(root).getPropertyValue('--color-tertiary
 const BACKGROUND_COLOR = getComputedStyle(root).getPropertyValue('--color-background').trim();
 
 function selectDifficulty() {
+// Display the welcome and difficulty selection modal; assign difficulty based on the user's choice
   return new Promise((resolve) => {
     const modal = document.getElementById('difficultyModal');
     const buttons = modal.querySelectorAll('button');
@@ -35,6 +36,7 @@ function selectDifficulty() {
 }
 
 function playAgain() {
+// Display the game over modal; launch the game again or display the closing animation, based on the user's choice
   const modal = document.getElementById('replayModal');
   const playAgainBtn = document.getElementById('playAgainBtn');
   const quitBtn = document.getElementById('quitBtn');
@@ -106,7 +108,7 @@ function handleClick (event) {
 }
 
 function flash () {
-    // Very slightly increases the brightness of the whole page for a subtle flash effect.
+// Very slightly increase the brightness of the whole page for a subtle flash effect.
     document.documentElement.style.filter = 'brightness(1.01)';
     setTimeout(() => document.documentElement.style.filter = '', 25);
 }
