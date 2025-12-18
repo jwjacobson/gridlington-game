@@ -9,6 +9,7 @@ const TOTAL_TURNS = 30; // How many times a square lights up, and therefore the 
 
 let DIFFICULTY;
 let PLAYER_SCORE = 0;
+let lastSavedTimestamp = null; // Track the timestamp of the most recently saved highscore
 
 // Set colors from styles.css
 const root = document.documentElement;
@@ -62,10 +63,11 @@ async function saveHighscore(initials, score) {
   try {
     const { db, collection, addDoc, query, orderBy, getDocs, deleteDoc, doc } = window.gameDB;
     
+    const timestamp = Date.now();
     await addDoc(collection(db, 'highscores'), {
       initials: initials.toUpperCase().substring(0, 3),
       score: score,
-      timestamp: Date.now()
+      timestamp: timestamp
     });
     
     const q = query(
@@ -81,6 +83,7 @@ async function saveHighscore(initials, score) {
       }
     }
     
+    lastSavedTimestamp = timestamp;
     return true;
   } catch (error) {
     console.error('Error saving highscore:', error);
@@ -91,7 +94,7 @@ async function saveHighscore(initials, score) {
 async function loadHighscores() {
 // Load and display the top 10 highscores
   try {
-    const { db, collection, query, orderBy, limit, getDocs } = window.gameDB;
+    const { db, collection, query, orderBy, getDocs } = window.gameDB;
     const q = query(
       collection(db, 'highscores'),
       orderBy('score', 'desc'),
@@ -109,6 +112,14 @@ async function loadHighscores() {
       entry.className = 'highscore-entry';
       
       if (scores[i]) {
+        // Highlight if this is the newly saved score (match by timestamp)
+        const isNewScore = lastSavedTimestamp && 
+                          scores[i].timestamp === lastSavedTimestamp;
+        
+        if (isNewScore) {
+          entry.classList.add('highlight');
+        }
+        
         entry.innerHTML = `
           <span class="rank">${i + 1}.</span>
           <span class="initials">${scores[i].initials}</span>
@@ -154,6 +165,7 @@ function showHighscoreEntry() {
     };
     
     const handleSkip = () => {
+      lastSavedTimestamp = null; // Don't highlight anything if skipped
       modal.close();
       resolve();
     };
@@ -171,31 +183,12 @@ function showHighscoreEntry() {
   });
 }
 
-function showHighscores() {
-// Display the highscores modal
-  const modal = document.getElementById('highscoresModal');
-  const closeBtn = document.getElementById('closeHighscoresBtn');
-  
-  loadHighscores();
-  
-  closeBtn.onclick = () => {
-    modal.close();
-  };
-  
-  modal.showModal();
-}
-
-async function playAgain() {
-// Display the game over modal; check for highscore and launch the game again or display the closing animation
-  const isHighscore = await checkHighscore(PLAYER_SCORE);
-  
-  if (isHighscore && PLAYER_SCORE > 0) {
-    await showHighscoreEntry();
-  }
+async function showReplayModal() {
+// Display the combined replay/highscores modal
+  await loadHighscores();
   
   const modal = document.getElementById('replayModal');
   const playAgainBtn = document.getElementById('playAgainBtn');
-  const viewHighscoresBtn = document.getElementById('viewHighscoresBtn');
   const quitBtn = document.getElementById('quitBtn');
   const finalScoreSpan = document.getElementById('finalScore');
   
@@ -203,17 +196,14 @@ async function playAgain() {
 
   playAgainBtn.onclick = () => {
     modal.close();
+    lastSavedTimestamp = null; // Reset for next round
     PLAYER_SCORE = 0;
     runGame();
   };
   
-  viewHighscoresBtn.onclick = () => {
-    modal.close();
-    showHighscores();
-  };
-  
   quitBtn.onclick = () => {
     modal.close();
+    lastSavedTimestamp = null; // Reset
 
     const thanksSquare = document.getElementById('thanksSquare');
     const forSquare = document.getElementById('forSquare');
@@ -240,6 +230,19 @@ async function playAgain() {
   };
   
   modal.showModal();
+}
+
+async function playAgain() {
+// Check for highscore and display the appropriate modals
+  const isHighscore = await checkHighscore(PLAYER_SCORE);
+  
+  if (isHighscore && PLAYER_SCORE > 0) {
+    await showHighscoreEntry();
+  } else {
+    lastSavedTimestamp = null; // No new highscore to highlight
+  }
+  
+  await showReplayModal();
 }
 
 function changeColor (square, color) {
