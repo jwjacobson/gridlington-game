@@ -1,7 +1,7 @@
-# Gridlington game -- catch the square!
+# Gridlington: catch the blue rectangle!
 
 ## About
-A little browser game in HTML, CSS, and Javascript. Click the colored square! It will flash pink if you catch it.
+A little browser game in HTML, CSS, and Javascript. Click the blue rectangle! It will flash pink if you catch it.
 
 A game version of the original [Gridlington](https://github.com/jwjacobson/gridlington).
 
