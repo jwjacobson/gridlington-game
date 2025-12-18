@@ -37,11 +37,12 @@ function selectDifficulty() {
 }
 
 async function checkHighscore(score) {
-// Check if the score qualifies for the top 10
+// Check if the score qualifies for the top 10 for the current difficulty
   try {
-    const { db, collection, query, orderBy, getDocs } = window.gameDB;
+    const { db, collection, query, where, orderBy, getDocs } = window.gameDB;
     const q = query(
       collection(db, 'highscores'),
+      where('difficulty', '==', DIFFICULTY),
       orderBy('score', 'desc'),
     );
     const snapshot = await getDocs(q);
@@ -59,19 +60,22 @@ async function checkHighscore(score) {
 }
 
 async function saveHighscore(initials, score) {
-// Save the highscore to Firebase and manage the top 10 limit
+// Save the highscore to Firebase and manage the top 10 limit for the current difficulty
   try {
-    const { db, collection, addDoc, query, orderBy, getDocs, deleteDoc, doc } = window.gameDB;
+    const { db, collection, addDoc, query, where, orderBy, getDocs, deleteDoc, doc } = window.gameDB;
     
     const timestamp = Date.now();
+    
     await addDoc(collection(db, 'highscores'), {
       initials: initials.toUpperCase().substring(0, 3),
       score: score,
+      difficulty: DIFFICULTY,
       timestamp: timestamp
     });
     
     const q = query(
       collection(db, 'highscores'),
+      where('difficulty', '==', DIFFICULTY),
       orderBy('score', 'desc'),
     );
     const snapshot = await getDocs(q);
@@ -92,14 +96,24 @@ async function saveHighscore(initials, score) {
 }
 
 async function loadHighscores() {
-// Load and display the top 10 highscores
+// Load and display the top 10 highscores for the current difficulty
   try {
-    const { db, collection, query, orderBy, getDocs } = window.gameDB;
+    const { db, collection, query, where, orderBy, getDocs } = window.gameDB;
+    
     const q = query(
       collection(db, 'highscores'),
+      where('difficulty', '==', DIFFICULTY),
       orderBy('score', 'desc'),
     );
     const snapshot = await getDocs(q);
+    
+    // Update the difficulty label in the modal
+    const difficultyLabel = document.getElementById('difficultyLabel');
+    if (difficultyLabel) {
+      // Convert difficulty time back to name for display
+      const difficultyName = Object.keys(DIFFICULTIES).find(key => DIFFICULTIES[key] === DIFFICULTY);
+      difficultyLabel.textContent = difficultyName.charAt(0).toUpperCase() + difficultyName.slice(1);
+    }
     
     const highscoresList = document.getElementById('highscoresList');
     highscoresList.innerHTML = '';

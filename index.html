@@ -27,7 +27,7 @@
             <h2>Game Over</h2>
             <p>Your score was <span id="finalScore"></span></p>
             <hr id="divider">
-            <h3>High Scores</h3>
+            <h3>High Scores - <span id="difficultyLabel"></span></h3>
             <div id="highscoresList"></div>
             <button id="playAgainBtn">Play Again</button>
             <button id="quitBtn">Quit</button>
@@ -68,7 +68,7 @@
     </div>
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, query, orderBy, limit, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, query, where, orderBy, limit, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyBXYI_4uIxI4ZLIyEw_2hgP7Ilh0eDARgQ",
@@ -82,7 +82,7 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  window.gameDB = { db, collection, addDoc, query, orderBy, limit, getDocs, deleteDoc, doc };
+  window.gameDB = { db, collection, addDoc, query, where, orderBy, limit, getDocs, deleteDoc, doc };
 </script>
 </body>
 </html>
