@@ -43,8 +43,7 @@ body {
     color: var(--color-primary);
 }
 
-
-#difficultyModal, #replayModal {
+#welcomeModal, #highscoreEntryModal {
     border: 1px solid var(--color-primary);
     padding: 2rem 2rem 1rem;
     background-color: var(--color-background);
@@ -57,24 +56,43 @@ body {
     margin: 0;
 }
 
-#difficultyModal::backdrop, #replayModal::backdrop {
+#replayModal {
+    border: 1px solid var(--color-primary);
+    padding: 2rem 4rem 1rem;
+    background-color: var(--color-background);
+    width: 400px;
+    text-align: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+}
+
+#welcomeModal::backdrop, #replayModal::backdrop, #highscoreEntryModal::backdrop {
     background-color: var(--color-modal-background);
     backdrop-filter: blur(3px);
 }
 
-#difficultyModal h1 {
+#welcomeModal h1 {
     color: var(--color-primary);
     margin-bottom: 1.5rem;
     font-size: 1.8rem;
 }
 
-#difficultyModal h2, #replayModal h2 {
+#welcomeModal h2, #replayModal h2, #highscoreEntryModal h2 {
     color: var(--color-primary);
     margin-bottom: 1.5rem;
     font-size: 1.6rem;
 }
 
-#difficultyModal p, #replayModal p {
+#replayModal h3 {
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+}
+
+#welcomeModal p, #replayModal p, #highscoreEntryModal p {
     color: var(--color-primary);
     margin: 1.5rem 0;
 }
@@ -85,12 +103,12 @@ body {
     margin: 20px 0;
 }
 
-#replayModal span {
+#replayModal span, #highscoreEntryModal span {
     color: var(--color-primary);
     font-weight:bold
 }
 
-#difficultyModal button, #replayModal button {
+#welcomeModal button, #replayModal button, #highscoreEntryModal button {
     display: block;
     width: 100%;
     padding: 1rem 2rem;
@@ -105,16 +123,87 @@ body {
     outline: none;
 }
 
-#difficultyModal button:focus, #replayModal button:focus {
+#welcomeModal button:focus, #replayModal button:focus, #highscoreEntryModal button:focus {
     outline: none;
 }
 
-#difficultyModal button:hover, #replayModal button:hover {
+#welcomeModal button:hover, #replayModal button:hover, #highscoreEntryModal button:hover {
     background-color: var(--color-tertiary);
 }
 
-#difficultyModal button:active, #replayModal button:active {
+#welcomeModal button:active, #replayModal button:active, #highscoreEntryModal button:active {
     background-color: var(--color-secondary);
+}
+
+#initialsInput {
+    width: 100%;
+    padding: 0.75rem;
+    margin: 1rem 0;
+    font-size: 1.2rem;
+    text-align: center;
+    text-transform: uppercase;
+    color: var(--color-primary);
+    background-color: var(--color-background);
+    border: 1px solid var(--color-primary);
+    outline: none;
+}
+
+#initialsInput:focus {
+    background-color: var(--color-tertiary);
+}
+
+#highscoresList {
+    max-height: 400px;
+    overflow-y: auto;
+    margin: 1.5rem 0;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+}
+
+#highscoresList::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+.highscore-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    margin: 0.5rem 0;
+    border: 1px solid var(--color-primary);
+    color: var(--color-primary);
+}
+
+.highscore-entry.highlight {
+    background-color: var(--color-secondary);
+    border: 2px solid var(--color-primary);
+    font-weight: 700;
+}
+
+.highscore-entry .rank {
+    font-weight: 600;
+    min-width: 3rem;
+    font-size: 1.2rem;
+}
+
+.highscore-entry .initials {
+    font-weight: 700;
+    font-size: 1.5rem;
+    flex: 1;
+    text-align: center;
+}
+
+.highscore-entry .score {
+    font-weight: 600;
+    min-width: 4rem;
+    text-align: right;
+    font-size: 1.2rem;
+}
+
+.no-scores, .error {
+    color: var(--color-primary);
+    padding: 2rem;
+    font-style: italic;
 }
 
 .attribution {

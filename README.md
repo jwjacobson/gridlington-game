@@ -3,6 +3,8 @@
 ## About
 A little browser game in HTML, CSS, and Javascript. Click the blue rectangle! It will flash pink if you catch it.
 
+The game now features high scores, stored on Firebase. Compete against your friends!
+
 A game version of the original [Gridlington](https://github.com/jwjacobson/gridlington).
 
 ## Installation/Use

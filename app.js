@@ -9,6 +9,7 @@ const TOTAL_TURNS = 30; // How many times a square lights up, and therefore the 
 
 let DIFFICULTY;
 let PLAYER_SCORE = 0;
+let lastSavedTimestamp = null; // Track the timestamp of the most recently saved highscore
 
 // Set colors from styles.css
 const root = document.documentElement;
@@ -20,7 +21,7 @@ const BACKGROUND_COLOR = getComputedStyle(root).getPropertyValue('--color-backgr
 function selectDifficulty() {
 // Display the welcome and difficulty selection modal; assign difficulty based on the user's choice
   return new Promise((resolve) => {
-    const modal = document.getElementById('difficultyModal');
+    const modal = document.getElementById('welcomeModal');
     const buttons = modal.querySelectorAll('button');
     
     buttons.forEach(button => {
@@ -35,8 +36,171 @@ function selectDifficulty() {
   });
 }
 
-function playAgain() {
-// Display the game over modal; launch the game again or display the closing animation, based on the user's choice
+async function checkHighscore(score) {
+// Check if the score qualifies for the top 10 for the current difficulty
+  try {
+    const { db, collection, query, where, orderBy, getDocs } = window.gameDB;
+    const q = query(
+      collection(db, 'highscores'),
+      where('difficulty', '==', DIFFICULTY),
+      orderBy('score', 'desc'),
+    );
+    const snapshot = await getDocs(q);
+    
+    if (snapshot.size < 10) {
+      return true;
+    }
+    
+    const lowestHighscore = snapshot.docs[snapshot.size - 1].data().score;
+    return score >= lowestHighscore;
+  } catch (error) {
+    console.error('Error checking highscores:', error);
+    return false;
+  }
+}
+
+async function saveHighscore(initials, score) {
+// Save the highscore to Firebase and manage the top 10 limit for the current difficulty
+  try {
+    const { db, collection, addDoc, query, where, orderBy, getDocs, deleteDoc, doc } = window.gameDB;
+    
+    const timestamp = Date.now();
+    
+    await addDoc(collection(db, 'highscores'), {
+      initials: initials.toUpperCase().substring(0, 3),
+      score: score,
+      difficulty: DIFFICULTY,
+      timestamp: timestamp
+    });
+    
+    const q = query(
+      collection(db, 'highscores'),
+      where('difficulty', '==', DIFFICULTY),
+      orderBy('score', 'desc'),
+    );
+    const snapshot = await getDocs(q);
+    
+    if (snapshot.size > 10) {
+      const docsToDelete = snapshot.docs.slice(10);
+      for (const docToDelete of docsToDelete) {
+        await deleteDoc(doc(db, 'highscores', docToDelete.id));
+      }
+    }
+    
+    lastSavedTimestamp = timestamp;
+    return true;
+  } catch (error) {
+    console.error('Error saving highscore:', error);
+    return false;
+  }
+}
+
+async function loadHighscores() {
+// Load and display the top 10 highscores for the current difficulty
+  try {
+    const { db, collection, query, where, orderBy, getDocs } = window.gameDB;
+    
+    const q = query(
+      collection(db, 'highscores'),
+      where('difficulty', '==', DIFFICULTY),
+      orderBy('score', 'desc'),
+    );
+    const snapshot = await getDocs(q);
+    
+    // Update the difficulty label in the modal
+    const difficultyLabel = document.getElementById('difficultyLabel');
+    if (difficultyLabel) {
+      // Convert difficulty time back to name for display
+      const difficultyName = Object.keys(DIFFICULTIES).find(key => DIFFICULTIES[key] === DIFFICULTY);
+      difficultyLabel.textContent = difficultyName.charAt(0).toUpperCase() + difficultyName.slice(1);
+    }
+    
+    const highscoresList = document.getElementById('highscoresList');
+    highscoresList.innerHTML = '';
+    
+    const scores = snapshot.docs.map(doc => doc.data());
+    
+    // Always display 10 ranks
+    for (let i = 0; i < 10; i++) {
+      const entry = document.createElement('div');
+      entry.className = 'highscore-entry';
+      
+      if (scores[i]) {
+        // Highlight if this is the newly saved score (match by timestamp)
+        const isNewScore = lastSavedTimestamp && 
+                          scores[i].timestamp === lastSavedTimestamp;
+        
+        if (isNewScore) {
+          entry.classList.add('highlight');
+        }
+        
+        entry.innerHTML = `
+          <span class="rank">${i + 1}.</span>
+          <span class="initials">${scores[i].initials}</span>
+          <span class="score">${scores[i].score}</span>
+        `;
+      } else {
+        entry.innerHTML = `
+          <span class="rank">${i + 1}.</span>
+          <span class="initials">---</span>
+          <span class="score">---</span>
+        `;
+      }
+      
+      highscoresList.appendChild(entry);
+    }
+  } catch (error) {
+    console.error('Error loading highscores:', error);
+    const highscoresList = document.getElementById('highscoresList');
+    highscoresList.innerHTML = '<p class="error">Error loading highscores</p>';
+  }
+}
+
+function showHighscoreEntry() {
+// Display the modal for entering initials
+  return new Promise((resolve) => {
+    const modal = document.getElementById('highscoreEntryModal');
+    const scoreSpan = document.getElementById('highscoreEntryScore');
+    const input = document.getElementById('initialsInput');
+    const submitBtn = document.getElementById('submitHighscoreBtn');
+    const skipBtn = document.getElementById('skipHighscoreBtn');
+    
+    scoreSpan.textContent = PLAYER_SCORE;
+    input.value = '';
+    input.focus();
+    
+    const handleSubmit = async () => {
+      const initials = input.value.trim();
+      if (initials.length > 0) {
+        await saveHighscore(initials, PLAYER_SCORE);
+      }
+      modal.close();
+      resolve();
+    };
+    
+    const handleSkip = () => {
+      lastSavedTimestamp = null; // Don't highlight anything if skipped
+      modal.close();
+      resolve();
+    };
+    
+    submitBtn.onclick = handleSubmit;
+    skipBtn.onclick = handleSkip;
+    
+    input.onkeypress = (e) => {
+      if (e.key === 'Enter' && input.value.trim().length > 0) {
+        handleSubmit();
+      }
+    };
+    
+    modal.showModal();
+  });
+}
+
+async function showReplayModal() {
+// Display the combined replay/highscores modal
+  await loadHighscores();
+  
   const modal = document.getElementById('replayModal');
   const playAgainBtn = document.getElementById('playAgainBtn');
   const quitBtn = document.getElementById('quitBtn');
@@ -46,12 +210,14 @@ function playAgain() {
 
   playAgainBtn.onclick = () => {
     modal.close();
+    lastSavedTimestamp = null; // Reset for next round
     PLAYER_SCORE = 0;
     runGame();
   };
   
   quitBtn.onclick = () => {
     modal.close();
+    lastSavedTimestamp = null; // Reset
 
     const thanksSquare = document.getElementById('thanksSquare');
     const forSquare = document.getElementById('forSquare');
@@ -78,6 +244,19 @@ function playAgain() {
   };
   
   modal.showModal();
+}
+
+async function playAgain() {
+// Check for highscore and display the appropriate modals
+  const isHighscore = await checkHighscore(PLAYER_SCORE);
+  
+  if (isHighscore && PLAYER_SCORE > 0) {
+    await showHighscoreEntry();
+  } else {
+    lastSavedTimestamp = null; // No new highscore to highlight
+  }
+  
+  await showReplayModal();
 }
 
 function changeColor (square, color) {

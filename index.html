@@ -19,7 +19,7 @@
     <meta name="twitter:image" content="https://jwjacobson.github.io/gridlington-game/assets/ogpreview.png">
 <body>
     <div class="container">
-        <dialog id="difficultyModal">
+        <dialog id="welcomeModal">
             <h1>Welcome to <span>Gridlington!</span></h1>
             <hr id="divider">
             <p>- Click each blue rectangle to get a point -</p>
@@ -35,8 +35,19 @@
         <dialog id="replayModal">
             <h2>Game Over</h2>
             <p>Your score was <span id="finalScore"></span></p>
+            <hr id="divider">
+            <h3>High Scores - <span id="difficultyLabel"></span></h3>
+            <div id="highscoresList"></div>
             <button id="playAgainBtn">Play Again</button>
             <button id="quitBtn">Quit</button>
+        </dialog>
+        <dialog id="highscoreEntryModal">
+            <h2>New Highscore!</h2>
+            <p>Your score: <span id="highscoreEntryScore"></span></p>
+            <p>Enter your initials (max 3 letters)</p>
+            <input type="text" id="initialsInput" maxlength="3">
+            <button id="submitHighscoreBtn">Submit</button>
+            <button id="skipHighscoreBtn">Skip</button>
         </dialog>
         <div class="square"></div>
         <div class="square"></div>
@@ -64,5 +75,23 @@
         <div class="square"></div>
         <div class="square"></div>
     </div>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, query, where, orderBy, limit, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBXYI_4uIxI4ZLIyEw_2hgP7Ilh0eDARgQ",
+    authDomain: "gridlington.firebaseapp.com",
+    projectId: "gridlington",
+    storageBucket: "gridlington.firebasestorage.app",
+    messagingSenderId: "628815979150",
+    appId: "1:628815979150:web:fec521c400412a857e5fdf"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  window.gameDB = { db, collection, addDoc, query, where, orderBy, limit, getDocs, deleteDoc, doc };
+</script>
 </body>
 </html>
