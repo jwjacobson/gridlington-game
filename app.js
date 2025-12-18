@@ -52,7 +52,7 @@ async function checkHighscore(score) {
     }
     
     const lowestHighscore = snapshot.docs[snapshot.size - 1].data().score;
-    return score > lowestHighscore;
+    return score >= lowestHighscore;
   } catch (error) {
     console.error('Error checking highscores:', error);
     return false;
